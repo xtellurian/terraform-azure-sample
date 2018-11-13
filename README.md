@@ -149,3 +149,7 @@ Set the following variables in your release pipeline
 Most secrets should be pulled from Azure CLI at runtime. For secrets that cannot, create a `.secrets` directory in the root of the project.
 
  * `vststoken.secret` -> Personal Access Token for Azure DevOps (used by release agent) 
+
+## Final Thoughts
+
+Terraform is, in theory, awesome. However in practice it's immature, difficult and buggy. I love the idea, and don't get me wrong - the vision Hashicorp have shown in developing this tool is amazing. But issues abound, including resources not being deleted, resources accidentally being deleted, slow release of Azure features into terraform, weird bugs and more. For now I reccomend using other automation tools like Ansible or simply ARM templates and Azure CLI.

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 ###############################################################
 # Script Parameters                                           #
 ###############################################################
@@ -34,7 +34,7 @@ fi
 set +e # errors don't matter
 
 # Create resource group
-if [ $(az group exists -n tf-dev) = "false" ]   
+if [ $(az group exists -n $RESOURCE_GROUP_NAME) = "false" ]   
 then
     az group create --name $RESOURCE_GROUP_NAME --location australiaeast
 else 
@@ -49,6 +49,8 @@ then
 else 
     az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob
 fi
+
+set +e
 
 # Get storage account key
 ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP_NAME --account-name $STORAGE_ACCOUNT_NAME --query [0].value -o tsv)
