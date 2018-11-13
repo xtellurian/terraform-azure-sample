@@ -7,4 +7,5 @@ cd "$(dirname "$0")"
     -m false \
     -p "dev.local.tfplan" \
     -f "dev.plan.summary" \
+    -r "true" \
     -z "-destroy"
