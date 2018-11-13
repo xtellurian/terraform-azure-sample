@@ -36,7 +36,7 @@ All terraform commands can be run via bash scripts. Scripts ending in `.local.sh
 
 > `docker-compose run cli`
 
-In the root directory, run the above for a local shell with terraform, helm, and Azure CLI installed. You can see the Dockerfile for this shell at [`docker/Dockerfile`](docker/Dockerfile)
+In the root directory, run the above for a local shell with terraform, and Azure CLI installed. You can see the Dockerfile for this shell at [`docker/Dockerfile`](docker/Dockerfile)
 
 ### Authenticate Azure CLI
 
