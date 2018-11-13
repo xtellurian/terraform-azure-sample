@@ -1,4 +1,4 @@
-
+set -e
 ###############################################################
 # Script Parameters                                           #
 ###############################################################
@@ -32,9 +32,7 @@ if [ -z "$ACCOUNT" ]; then
     exit 1
 fi
 
-ACR_NAME=agents
-# use this image if you din't want to use your own ACR
-# IMAGE="flanagan89/tf-vsts-agent:latest"
+IMAGE="flanagan89/tf-vsts-agent:latest"
 
 ###############################################################
 # Script Begins                                               #
@@ -44,22 +42,12 @@ ACR_NAME=agents
 echo "Creating resource group $RESOURCE_GROUP_NAME"
 az group create --name $RESOURCE_GROUP_NAME --location australiaeast
 
-# create the container
-ACR_PASSWORD=$(az acr credential show -g $RESOURCE_GROUP_NAME -n $ACR_NAME --query passwords[1].value --out tsv)
+echo "Creating ACI $CONTAINER_NAME from image $IMAGE"
 
-echo "Creating ACI $CONTAINER_NAME from image $ACR_NAME.azurecr.io/vsts-agent:latest"
-
+# use this line if you just want to use the regular image
 az container create --resource-group $RESOURCE_GROUP_NAME --name $CONTAINER_NAME --assign-identity \
-    --image $ACR_NAME.azurecr.io/vsts-agent:latest \
-    --registry-login-server $ACR_NAME.azurecr.io \
-    --registry-username $ACR_NAME \
-    --registry-password $ACR_PASSWORD \
+    --image $IMAGE \
     --environment-variables VSTS_ACCOUNT=$ACCOUNT VSTS_TOKEN=$TOKEN VSTS_POOL=terraform-aci
-
-# # use this line if you just want to use the regular image
-# az container create --resource-group $RESOURCE_GROUP_NAME --name $CONTAINER_NAME --assign-identity \
-#     --image $IMAGE \
-#     --environment-variables VSTS_ACCOUNT=$ACCOUNT VSTS_TOKEN=$TOKEN VSTS_POOL=terraform-aci
 
 #get identity of container
 spID=$(az container show --resource-group $RESOURCE_GROUP_NAME --name $CONTAINER_NAME --query identity.principalId --out tsv)

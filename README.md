@@ -1,6 +1,6 @@
 # Cloud Infrastructure on Azure with Terraform 
 
-[![Build Status](https://dev.azure.com/CSEAussieBoys/Terraform/_apis/build/status/Terraform)](https://dev.azure.com/CSEAussieBoys/Terraform/_build/latest?definitionId=2)
+[![Build Status](https://dev.azure.com/aussiedevcrew/terraform-azure-sample/_apis/build/status/xtellurian.terraform-azure-sample)](https://dev.azure.com/aussiedevcrew/terraform-azure-sample/_build/latest?definitionId=1)
 
 ## What's the point?
 
@@ -83,6 +83,8 @@ Then, [get a Personal Access Token](https://docs.microsoft.com/en-us/azure/devop
 To create an agent, edit and run the following script:
 
 > `./agents/create-agent.sh -t "$(cat .secrets/vststoken.secret)" -g tf-agents -n vs-agent -a <YOUR_AZUREDEVOPS_ACCOUT_NAME>`
+
+Note, this can take several minutes as the image is large.
 
 ### Connecting Azure DevOps to Azure
 
