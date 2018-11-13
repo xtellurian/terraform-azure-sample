@@ -1,0 +1,48 @@
+# Azure Pipeline.
+# Runs terraform plan against two environments
+
+name: $(Date:yyyyMMdd).$(Rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    exclude:
+    - features/*
+  paths:
+    exclude:
+    - README.md
+jobs:
+- job: Plan_Environments
+  strategy:
+    matrix:
+      dev:
+        env: 'dev'
+      prod:
+        env: 'prod'
+  variables:
+    azuresub: rian
+  pool:
+    name: "terraform-aci"
+  steps:
+  - script: terraform fmt -check=true
+    displayName: Check terraform is formatted correctly
+  - bash: ls
+    displayName: list files
+  - bash: find . -name '*.sh' | while read p; do (>&2 bash -n $p) done 
+    displayName: Check bash scripts have correct syntax
+    failOnStderr: true
+  - task: AzureCLI@1
+    displayName: Plan Changes
+    inputs:
+      azureSubscription: rian
+      scriptLocation: 'scriptPath' # Options: inlineScript, scriptPath
+      scriptPath: src/plan.sh
+      arguments: -e $(env) -g $(tfstate.resourcegroup) -a $(tfstate.storageaccountname) -f "$(Build.StagingDirectory)/tfplan.summary.txt"
+  - script: rm -rf src/.terraform && cp -r src/ $(Build.StagingDirectory)
+    displayName: Purge src/.terraform && copy src files to staging dir
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: $(env)-drop
+      publishLocation: 'Container' # Options: container, filePath

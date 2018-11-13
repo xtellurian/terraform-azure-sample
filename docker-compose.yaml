@@ -1,0 +1,11 @@
+version:  '3'
+services:
+  # docker-compose run cli
+  cli:
+      image: flanagan89/az-terraform-cli:latest
+      stdin_open: true
+      tty: true
+      container_name: cli
+      working_dir: /tf
+      volumes:
+      - ./:/tf
